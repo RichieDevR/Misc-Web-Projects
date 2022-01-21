@@ -110,7 +110,7 @@ btnHold.addEventListener('click', () => {
       document
         .querySelector(`.player--${activePlayer}`)
         .classList.add('player--winner');
-      document.querySelector(`#name--${activePlayer}`).textContent =
+      document.getELementById(`name--${activePlayer}`).textContent =
         'Winner!🎊';
     } else {
       // switch player and make it DRY😘
