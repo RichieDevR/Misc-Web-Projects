@@ -1,98 +1,120 @@
 /* eslint-env browser */
 
-// Selecting elements
-const player0El = document.querySelector('.player--0');
-const player1El = document.querySelector('.player--1');
-const score0El = document.querySelector('#score--0');
-const score1El = document.getElementById('score--1');
-const current0El = document.getElementById('current--0');
-const current1El = document.getElementById('current--1');
+// select the elements
+const score0 = document.getElementById('score--0');
+const score1 = document.getElementById('score--1');
+const current0 = document.getElementById('current--0');
+const current1 = document.getElementById('current--1');
+const player0 = document.querySelector('.player--0');
+const player1 = document.querySelector('.player--1');
 
-const diceEl = document.querySelector('.dice');
+const dice = document.querySelector('.dice');
 const btnNew = document.querySelector('.btn--new');
-const btnRoll = document.querySelector('.btn--roll');
 const btnHold = document.querySelector('.btn--hold');
+const btnRoll = document.querySelector('.btn--roll');
 
-let scores, currentScore, activePlayer, playing;
+dice.classList.add('hidden');
+const scores = [0, 0]; // array to hold the scores
+let currentScore = 0; // variable to track the score and hold its state
+let activePlayer = 0; // variable to track the active player and switch player state
 
-// Starting conditions
-const init = function () {
-  scores = [0, 0];
-  currentScore = 0;
-  activePlayer = 0;
-  playing = true;
+let playing = true; // Gameplay switch turns off game functionality using boolean values
 
-  score0El.textContent = 0;
-  score1El.textContent = 0;
-  current0El.textContent = 0;
-  current1El.textContent = 0;
+/* Todo: I want to add logic that applies new emojis one for 
+the winner and another for the loser applied after the first 
+full game when new game is clicked */
 
-  diceEl.classList.add('hidden');
-  player0El.classList.remove('player--winner');
-  player1El.classList.remove('player--winner');
-  player0El.classList.add('player--active');
-  player1El.classList.remove('player--active');
+/* reset game elements on btnNew event 
+bo0lean param turns gameplay back on after 
+verifying winner turns it off */
+const newGame = boolean => {
+  if (boolean) {
+    scores[0] = 0;
+    scores[1] = 0;
+
+    score0.textContent = 0;
+    score1.textContent = 0;
+    current0.textContent = 0;
+    current1.textContent = 0;
+
+    player0.classList.add('player--active');
+    player1.classList.remove('player--active');
+    player0.classList.remove('player--winner');
+    player1.classList.remove('player--winner');
+
+    document.getElementById(`name--0`).textContent = 'Player 1 😸';
+    document.getElementById(`name--1`).textContent = 'Player 2 😺';
+    dice.classList.add('hidden');
+  }
 };
-init();
 
-const switchPlayer = function () {
-  document.getElementById(`current--${activePlayer}`).textContent = 0;
+// function to switch players keeps code DRYish(Dont Repeat Yourself)
+const nextPlayer = () => {
+  activePlayer = activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0);
   currentScore = 0;
-  activePlayer = activePlayer === 0 ? 1 : 0;
-  player0El.classList.toggle('player--active');
-  player1El.classList.toggle('player--active');
+  current0.textContent = 0;
+  current1.textContent = 0;
+  player0.classList.toggle('player--active');
+  player1.classList.toggle('player--active');
 };
 
-// Rolling dice functionality
-btnRoll.addEventListener('click', function () {
+// Dice roll button click functionality
+btnRoll.addEventListener('click', () => {
   if (playing) {
-    // 1. Generating a random dice roll
-    const dice = Math.trunc(Math.random() * 6) + 1;
+    // Generates a random dice roll
+    const diceRoll = Math.floor(Math.random() * 6) + 1;
 
-    // 2. Display dice
-    diceEl.classList.remove('hidden');
-    diceEl.src = `dice-${dice}.png`;
+    // Displays the corresponding dice image
+    dice.classList.remove('hidden');
+    dice.src = `dice-${diceRoll}.png`;
 
-    // 3. Check for rolled 1
-    if (dice !== 1) {
-      // Add dice to current score
-      currentScore += dice;
-      document.getElementById(
-        `current--${activePlayer}`
-      ).textContent = currentScore;
+    // Check for Dice roll of 1
+    if (diceRoll !== 1) {
+      // add dice to the current score
+      currentScore += diceRoll;
+
+      document.getElementById(`current--${activePlayer}`).textContent =
+        currentScore;
     } else {
-      // Switch to next player
-      switchPlayer();
+      // switch to the next player
+      nextPlayer();
     }
   }
 });
 
-btnHold.addEventListener('click', function () {
-  if (playing) {
-    // 1. Add current score to active player's score
-    scores[activePlayer] += currentScore;
-    // scores[1] = scores[1] + currentScore
+// New Game Reset Button Functionality
+btnNew.addEventListener('click', () => {
+  playing = true;
+  newGame(playing);
+});
 
+// score keeping hold button functionality and  check for winner update
+btnHold.addEventListener('click', () => {
+  if (playing) {
+    // keep score between rolls and player turns
+    scores[activePlayer] += currentScore;
+
+    // set score
     document.getElementById(`score--${activePlayer}`).textContent =
       scores[activePlayer];
 
-    // 2. Check if player's score is >= 100
+    // check for winner
     if (scores[activePlayer] >= 100) {
-      // Finish the game
+      // winner found means game is over and playing now false
       playing = false;
-      diceEl.classList.add('hidden');
-
-      document
-        .querySelector(`.player--${activePlayer}`)
-        .classList.add('player--winner');
+      // notify winner on screen of win
+      // todo: add confetti with confetti js it was really late when I did this
       document
         .querySelector(`.player--${activePlayer}`)
         .classList.remove('player--active');
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.add('player--winner');
+      document.querySelector(`#name--${activePlayer}`).textContent =
+        'Winner!🎊';
     } else {
-      // Switch to the next player
-      switchPlayer();
+      // switch player and make it DRY😘
+      nextPlayer();
     }
   }
 });
-
-btnNew.addEventListener('click', init);
