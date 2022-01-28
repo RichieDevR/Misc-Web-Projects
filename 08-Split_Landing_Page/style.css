@@ -5,7 +5,7 @@
 	--left-bg-color: rgba(87, 84, 236, 0.7);
   --right-bg-color: rgba(43, 43, 43, 0.7);
 	--left-btn-hover-color: rgba(87, 84, 236, 1);
-	--right-btn-hover-color: rgba(28, 122, 28, 1);
+	--right-btn-hover-color: rgba(254, 0, 26, 1);
 	--hover-width: 75%;
 	--other-width: 25%;
 	--speed:0.5s;
@@ -79,7 +79,7 @@ h1{
 
 .split.left {
 	left:0;
-	background:url('ps.jpg');
+	background:url('pepsi.jpg');
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -94,7 +94,7 @@ background-color: var(--left-bg-color);
 
 .split.right {
 	right:0;
-	background:url('xbox.jpg');
+	background:url('coke.jpeg');
 	background-repeat: no-repeat;
 	background-size: cover;
 }
