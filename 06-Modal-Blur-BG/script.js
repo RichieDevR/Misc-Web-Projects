@@ -12,16 +12,16 @@ openModal.forEach(button => {
   });
 });
 
-const classAdd = () => {
+const addClass = () => {
   modal.classList.add('hidden');
   overlay.classList.add('hidden');
 };
 
-const clickClose = element => element.addEventListener('click', classAdd);
+const clickClose = element => element.addEventListener('click', addClass);
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    if (!modal.classList.contains('hidden')) classAdd();
+    if (!modal.classList.contains('hidden')) addClass();
   }
 });
 
